@@ -118,6 +118,84 @@ app.put('/products/:id', (req, res) => {
   }
 })
 
+app.put('/products/:id/increase', (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const dataReq = req.body;
+
+    const scheme = joi.object({
+      stock: joi.number().positive().required(),
+    });
+
+    const { error } = scheme.validate(dataReq);
+    if (error) {
+      res.status(400).json({ status: 'Validation Failed', message: error.details[0].message })
+    }
+
+    const parsedID = parseInt(id, 10)
+    const dataToBeChanged = data["products"].find((el) => el.id === parsedID);
+    if (!dataToBeChanged) {
+      return handleClientError(res, 404, "Data Not Found");
+    }
+
+    const newQuantity = dataToBeChanged.quantity_in_stock + dataReq.stock;
+    const filteredData = data["products"].filter((el) => el.id !== parsedID);
+
+    const changedData = {...dataToBeChanged, quantity_in_stock: newQuantity};
+    filteredData.push(changedData);
+    const newOrderedData = orderData(filteredData);
+    data["products"] = newOrderedData;
+    fs.writeFileSync(database, JSON.stringify(data));
+    return res.status(200).json({ data: changedData, status: 'Success' });
+  
+  } catch (error) {
+    console.error(error);
+    return handleServerError(res);
+  }
+})
+
+app.put('/products/:id/decrease', (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const dataReq = req.body;
+
+    const scheme = joi.object({
+      stock: joi.number().positive().required(),
+    });
+
+    const { error } = scheme.validate(dataReq);
+    if (error) {
+      res.status(400).json({ status: 'Validation Failed', message: error.details[0].message })
+    }
+
+    const parsedID = parseInt(id, 10)
+    const dataToBeChanged = data["products"].find((el) => el.id === parsedID);
+    if (!dataToBeChanged) {
+      return handleClientError(res, 404, "Data Not Found");
+    }
+
+    if (dataToBeChanged.quantity_in_stock < dataReq.stock) {
+      return handleClientError(res, 400, "Stock is now lower than requested");
+    }
+
+    const newQuantity = dataToBeChanged.quantity_in_stock - dataReq.stock;
+    const filteredData = data["products"].filter((el) => el.id !== parsedID);
+
+    const changedData = {...dataToBeChanged, quantity_in_stock: newQuantity};
+    filteredData.push(changedData);
+    const newOrderedData = orderData(filteredData);
+    data["products"] = newOrderedData;
+    fs.writeFileSync(database, JSON.stringify(data));
+    return res.status(200).json({ data: changedData, status: 'Success' });
+  
+  } catch (error) {
+    console.error(error);
+    return handleServerError(res);
+  }
+})
+
 app.delete('/products/:id', (req, res) => {
   try {
     const { id } = req.params;

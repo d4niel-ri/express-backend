@@ -211,6 +211,115 @@ _Response (400 - Duplicate Name Product)_
 
 ---
 
+### PUT /products/:id/increase
+
+> Increase stock of product
+
+_Request Params_
+```
+/<id>
+```
+_Request Header_
+```
+not needed
+```
+
+_Request Body_
+```
+{
+  "stock": <stock>
+}
+```
+
+_Response (200)_
+```
+{
+  "data": {
+    "id": <id>
+    "name": <name>,
+    "description": <description>,
+    "price": <price>,
+    "quantity_in_stock": <quantity_in_stock>
+  },
+  "status": "Success"
+}
+```
+
+_Response (400 - Validation Error)_
+```
+{ 
+  "status": "Validation Failed",
+  "message": "\"stock\" must be a positive number"
+}
+```
+
+_Response (404 - Error Not Found)_
+```
+{
+  "message": "Data Not Found"
+}
+```
+
+---
+
+### PUT /products/:id/decrease
+
+> Decrease stock of product
+
+_Request Params_
+```
+/<id>
+```
+_Request Header_
+```
+not needed
+```
+
+_Request Body_
+```
+{
+  "stock": <stock>
+}
+```
+
+_Response (200)_
+```
+{
+  "data": {
+    "id": <id>
+    "name": <name>,
+    "description": <description>,
+    "price": <price>,
+    "quantity_in_stock": <quantity_in_stock>
+  },
+  "status": "Success"
+}
+```
+
+_Response (400 - Validation Error)_
+```
+{ 
+  "status": "Validation Failed",
+  "message": "\"stock\" must be a positive number"
+}
+```
+
+_Response (404 - Error Not Found)_
+```
+{
+  "message": "Data Not Found"
+}
+```
+
+_Response (400 - Stock is lower than requested)_
+```
+{
+  "message": "Stock is now lower than requested"
+}
+```
+
+---
+
 ### DELETE /products/:id
 
 > Delete product
