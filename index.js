@@ -55,7 +55,7 @@ app.post('/products', (req, res) => {
 
     const { error } = scheme.validate(newData);
     if (error) {
-      res.status(400).json({ status: 'Validation Failed', message: error.details[0].message })
+      return res.status(400).json({ status: 'Validation Failed', message: error.details[0].message })
     }
     
     if (data.products.find((el) => el.name.toLowerCase() === newData.name.toLowerCase())) {
@@ -89,7 +89,7 @@ app.put('/products/:id', (req, res) => {
 
     const { error } = scheme.validate(dataRequest);
     if (error) {
-      res.status(400).json({ status: 'Validation Failed', message: error.details[0].message })
+      return res.status(400).json({ status: 'Validation Failed', message: error.details[0].message })
     }
 
     const parsedID = parseInt(id, 10);
@@ -130,7 +130,7 @@ app.put('/products/:id/increase', (req, res) => {
 
     const { error } = scheme.validate(dataReq);
     if (error) {
-      res.status(400).json({ status: 'Validation Failed', message: error.details[0].message })
+      return res.status(400).json({ status: 'Validation Failed', message: error.details[0].message })
     }
 
     const parsedID = parseInt(id, 10)
@@ -167,7 +167,7 @@ app.put('/products/:id/decrease', (req, res) => {
 
     const { error } = scheme.validate(dataReq);
     if (error) {
-      res.status(400).json({ status: 'Validation Failed', message: error.details[0].message })
+      return res.status(400).json({ status: 'Validation Failed', message: error.details[0].message })
     }
 
     const parsedID = parseInt(id, 10)
