@@ -98,12 +98,14 @@ app.put('/products/:id', (req, res) => {
       return handleClientError(res, 404, "Data Not Found");
     }
 
-    const changedData = {...dataToBeChanged, ...dataRequest};
     const filteredData = data["products"].filter((el) => el.id !== parsedID);
-    if (filteredData.find((el) => el.name.toLowerCase() === changedData.name.toLowerCase())) {
-      return handleClientError(res, 400, "Data with this name already existed");
+    if (dataRequest.name) {
+      if (filteredData.find((el) => el.name.toLowerCase() === dataRequest.name.toLowerCase())) {
+        return handleClientError(res, 400, "Data with this name already existed");
+      }
     }
 
+    const changedData = {...dataToBeChanged, ...dataRequest};
     filteredData.push(changedData);
     const newOrderedData = orderData(filteredData);
     data["products"] = newOrderedData;
